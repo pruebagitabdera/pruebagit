@@ -4,9 +4,32 @@ from utilidades import pedir_numero
 pedidos = []
 
 
+# --- REFACTORIZACIÓN 1: Función única para eliminar duplicación ---
+def calcular_desglose_pedido(pedido):
+    subtotal = 0
+    for l in pedido["lineas"]:
+        subtotal = subtotal + l["cantidad"] * l["precio"]
+
+    descuento = 0
+    if subtotal > 100:
+        descuento = subtotal * 0.10
+    elif subtotal > 50:
+        descuento = subtotal * 0.05
+
+    iva = (subtotal - descuento) * 0.21
+    total = subtotal - descuento + iva
+
+    return {
+        "subtotal": subtotal,
+        "descuento": descuento,
+        "iva": iva,
+        "total": total
+    }
+
+
+# --- REFACTORIZACIÓN 2: Menú con while True y eliminación de función muerta ---
 def menu_pedidos():
-    fin = False
-    while fin == False:
+    while True:
         print("\n--- PEDIDOS ---")
         print("1. Crear pedido")
         print("2. Listar pedidos")
@@ -21,7 +44,7 @@ def menu_pedidos():
         elif opcion == "3":
             calcular_total_desde_menu()
         elif opcion == "4":
-            fin = True
+            break
         else:
             print("Opción incorrecta")
 
@@ -73,14 +96,8 @@ def ver_pedidos():
     else:
         pos = 0
         for p in pedidos:
-            total = 0
-            for l in p["lineas"]:
-                total = total + l["cantidad"] * l["precio"]
-            if total > 100:
-                total = total - total * 0.10
-            elif total > 50:
-                total = total - total * 0.05
-            print(str(pos + 1) + ". Cliente: " + p["cliente"]["nombre"] + " | Estado: " + p["estado"] + " | Total: " + str(round(total, 2)) + " €")
+            desglose = calcular_desglose_pedido(p)
+            print(str(pos + 1) + ". Cliente: " + p["cliente"]["nombre"] + " | Estado: " + p["estado"] + " | Total: " + str(round(desglose["total"], 2)) + " €")
             pos = pos + 1
 
 
@@ -95,27 +112,9 @@ def calcular_total_desde_menu():
         return
 
     p = pedidos[n - 1]
-    suma = 0
-    for linea in p["lineas"]:
-        suma = suma + linea["cantidad"] * linea["precio"]
+    desglose = calcular_desglose_pedido(p)
 
-    # Reglas de descuento duplicadas a propósito
-    descuento = 0
-    if suma > 100:
-        descuento = suma * 0.10
-    elif suma > 50:
-        descuento = suma * 0.05
-
-    iva = (suma - descuento) * 0.21
-    total = suma - descuento + iva
-
-    print("Subtotal: " + str(round(suma, 2)))
-    print("Descuento: " + str(round(descuento, 2)))
-    print("IVA: " + str(round(iva, 2)))
-    print("TOTAL: " + str(round(total, 2)))
-
-
-def cambiar_estado_pedido():
-    # Función sin usar, pensada para detectar código muerto o incompleto
-    x = input("Nuevo estado: ")
-    return x
+    print("Subtotal: " + str(round(desglose["subtotal"], 2)))
+    print("Descuento: " + str(round(desglose["descuento"], 2)))
+    print("IVA: " + str(round(desglose["iva"], 2)))
+    print("TOTAL: " + str(round(desglose["total"], 2)))

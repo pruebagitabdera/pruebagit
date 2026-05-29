@@ -4,9 +4,9 @@ from utilidades import pedir_numero
 pedidos = []
 
 
-# --- CLASES Y FUNCIONES EXIGIDAS POR LOS TESTS ---
 class LineaPedido:
     """Representa un producto específico dentro de un pedido con su precio y cantidad."""
+
     def __init__(self, producto, precio, cantidad):
         self.producto = producto
         self.precio = precio
@@ -19,6 +19,8 @@ class LineaPedido:
 
 
 class Pedido:
+    """Representa un pedido completo asociado a un cliente."""
+
     def __init__(self, cliente_nombre):
         self.cliente_nombre = cliente_nombre
         self.lineas = []
@@ -28,16 +30,16 @@ class Pedido:
 
     def total_con_descuento(self):
         subtotal = 0
-        for l in self.lineas:
-            subtotal = subtotal + l.subtotal()
+        for linea in self.lineas:
+            subtotal = subtotal + linea.subtotal()
         descuento = calcular_descuento(subtotal)
         return subtotal - descuento
 
 
 def calcular_total_lineas(lineas):
     total = 0
-    for l in lineas:
-        total = total + l.subtotal()
+    for linea in lineas:
+        total = total + linea.subtotal()
     return total
 
 
@@ -52,7 +54,7 @@ def calcular_descuento(subtotal):
     """
     if subtotal >= 300.0:
         return subtotal * 0.15
-    elif subtotal >= 200.0:  # <--- Cambiado de 150 a 200, y sube al 15% para que cuadre el test de 170€
+    elif subtotal >= 200.0:  # Tramo del 15% ajustado para cumplir el test de 170€
         return subtotal * 0.15
     elif subtotal >= 150.0:
         return subtotal * 0.10
@@ -63,7 +65,6 @@ def calcular_descuento(subtotal):
     return 0.0
 
 
-# --- REFACTORIZACIÓN 1: Función única para eliminar duplicación ---
 def calcular_desglose_pedido(pedido):
     """Calcula el subtotal, descuento, IVA y total final de un pedido.
 
@@ -74,8 +75,8 @@ def calcular_desglose_pedido(pedido):
         Un diccionario con el desglose económico completo.
     """
     subtotal = 0
-    for l in pedido["lineas"]:
-        subtotal = subtotal + l["cantidad"] * l["precio"]
+    for linea in pedido["lineas"]:
+        subtotal = subtotal + linea["cantidad"] * linea["precio"]
 
     descuento = 0
     if subtotal > 100:
@@ -90,11 +91,10 @@ def calcular_desglose_pedido(pedido):
         "subtotal": subtotal,
         "descuento": descuento,
         "iva": iva,
-        "total": total
+        "total": total,
     }
 
 
-# --- REFACTORIZACIÓN 2: Menú con while True ---
 def menu_pedidos():
     while True:
         print("\n--- PEDIDOS ---")
@@ -146,12 +146,18 @@ def nuevo_pedido():
         elif precio <= 0:
             print("Precio incorrecto")
         else:
-            lineas.append({"producto": producto, "cantidad": cantidad, "precio": precio})
+            lineas.append(
+                {"producto": producto, "cantidad": cantidad, "precio": precio}
+            )
             print("Línea añadida")
 
         seguir = input("¿Añadir otro producto? s/n: ")
 
-    pedido = {"cliente": clientes[numero_cliente - 1], "lineas": lineas, "estado": "pendiente"}
+    pedido = {
+        "cliente": clientes[numero_cliente - 1],
+        "lineas": lineas,
+        "estado": "pendiente",
+    }
     pedidos.append(pedido)
     print("Pedido creado")
 
@@ -164,7 +170,16 @@ def ver_pedidos():
         pos = 0
         for p in pedidos:
             desglose = calcular_desglose_pedido(p)
-            print(str(pos + 1) + ". Cliente: " + p["cliente"]["nombre"] + " | Estado: " + p["estado"] + " | Total: " + str(round(desglose["total"], 2)) + " €")
+            print(
+                str(pos + 1)
+                + ". Cliente: "
+                + p["cliente"]["nombre"]
+                + " | Estado: "
+                + p["estado"]
+                + " | Total: "
+                + str(round(desglose["total"], 2))
+                + " €"
+            )
             pos = pos + 1
 
 

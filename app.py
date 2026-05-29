@@ -1,11 +1,11 @@
-from pedidos import menu_pedidos
 from clientes import menu_clientes
+from pedidos import menu_pedidos
 from utilidades import mostrar_titulo
 
 
 def main():
     salir = False
-    while salir == False:
+    while not salir:
         mostrar_titulo("GESTOR DE PEDIDOS")
         print("1. Clientes")
         print("2. Pedidos")

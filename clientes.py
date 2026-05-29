@@ -3,9 +3,9 @@ import re
 clientes = []
 
 
-# --- CLASES Y VALIDACIONES EXIGIDAS POR LOS TESTS ---
 class Cliente:
-    """Representa a un cliente del sistema con sus datos de contacto"""
+    """Representa a un cliente del sistema con sus datos de contacto."""
+
     def __init__(self, nombre, email, telefono=""):
         self.nombre = nombre
         self.email = email
@@ -44,10 +44,9 @@ def validar_email(email):
     return True
 
 
-# --- TU CÓDIGO ORIGINAL ---
 def menu_clientes():
     terminar = False
-    while terminar == False:
+    while not terminar:
         print("\n--- CLIENTES ---")
         print("1. Añadir cliente")
         print("2. Listar clientes")
@@ -88,7 +87,15 @@ def listar_clientes():
         i = 0
         while i < len(clientes):
             c = clientes[i]
-            print(str(i + 1) + ". " + c["nombre"] + " - " + c["telefono"] + " - " + c["email"])
+            print(
+                str(i + 1)
+                + ". "
+                + c["nombre"]
+                + " - "
+                + c["telefono"]
+                + " - "
+                + c["email"]
+            )
             i = i + 1
 
 
@@ -96,8 +103,12 @@ def buscar_cliente():
     texto = input("Texto a buscar: ")
     encontrado = False
     for c in clientes:
-        if texto.lower() in c["nombre"].lower() or texto in c["telefono"] or texto.lower() in c["email"].lower():
+        if (
+            texto.lower() in c["nombre"].lower()
+            or texto in c["telefono"]
+            or texto.lower() in c["email"].lower()
+        ):
             print(c["nombre"] + " - " + c["telefono"] + " - " + c["email"])
             encontrado = True
-    if encontrado == False:
+    if not encontrado:
         print("No se encontraron clientes")

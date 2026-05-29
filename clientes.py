@@ -5,6 +5,7 @@ clientes = []
 
 # --- CLASES Y VALIDACIONES EXIGIDAS POR LOS TESTS ---
 class Cliente:
+    """Representa a un cliente del sistema con sus datos de contacto"""
     def __init__(self, nombre, email, telefono=""):
         self.nombre = nombre
         self.email = email
@@ -15,12 +16,28 @@ class Cliente:
 
 
 def validar_nombre(nombre):
+    """Comprueba si el nombre introducido es válido y no está vacío.
+
+    Args:
+        nombre: Texto con el nombre del cliente.
+
+    Returns:
+        True si es válido, False si está vacío.
+    """
     if nombre is None or nombre.strip() == "":
         return False
     return True
 
 
 def validar_email(email):
+    """Verifica si el correo electrónico tiene un formato correcto.
+
+    Args:
+        email: Texto con el correo electrónico.
+
+    Returns:
+        True si el formato es correcto, False en caso contrario.
+    """
     patron = r"^[\w\.-]+@[\w\.-]+\.\w+$"
     if email is None or not re.match(patron, email):
         return False

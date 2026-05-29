@@ -6,6 +6,7 @@ pedidos = []
 
 # --- CLASES Y FUNCIONES EXIGIDAS POR LOS TESTS ---
 class LineaPedido:
+    """Representa un producto específico dentro de un pedido con su precio y cantidad."""
     def __init__(self, producto, precio, cantidad):
         self.producto = producto
         self.precio = precio
@@ -41,6 +42,14 @@ def calcular_total_lineas(lineas):
 
 
 def calcular_descuento(subtotal):
+    """Calcula el descuento aplicable según el importe subtotal del pedido.
+
+    Args:
+        subtotal: Importe total antes de aplicar descuentos.
+
+    Returns:
+        El valor del descuento en euros.
+    """
     if subtotal >= 300.0:
         return subtotal * 0.15
     elif subtotal >= 200.0:  # <--- Cambiado de 150 a 200, y sube al 15% para que cuadre el test de 170€
@@ -56,6 +65,14 @@ def calcular_descuento(subtotal):
 
 # --- REFACTORIZACIÓN 1: Función única para eliminar duplicación ---
 def calcular_desglose_pedido(pedido):
+    """Calcula el subtotal, descuento, IVA y total final de un pedido.
+
+    Args:
+        pedido: Diccionario con los datos y líneas del pedido.
+
+    Returns:
+        Un diccionario con el desglose económico completo.
+    """
     subtotal = 0
     for l in pedido["lineas"]:
         subtotal = subtotal + l["cantidad"] * l["precio"]

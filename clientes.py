@@ -1,6 +1,33 @@
+import re
+
 clientes = []
 
 
+# --- CLASES Y VALIDACIONES EXIGIDAS POR LOS TESTS ---
+class Cliente:
+    def __init__(self, nombre, email, telefono=""):
+        self.nombre = nombre
+        self.email = email
+        self.telefono = telefono
+
+    def es_valido(self):
+        return validar_nombre(self.nombre) and validar_email(self.email)
+
+
+def validar_nombre(nombre):
+    if nombre is None or nombre.strip() == "":
+        return False
+    return True
+
+
+def validar_email(email):
+    patron = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+    if email is None or not re.match(patron, email):
+        return False
+    return True
+
+
+# --- TU CÓDIGO ORIGINAL ---
 def menu_clientes():
     terminar = False
     while terminar == False:
@@ -28,7 +55,6 @@ def crear_cliente():
     telefono = input("Teléfono: ")
     email = input("Email: ")
 
-    # Validación pobre a propósito para que se pueda mejorar
     if nombre == "":
         print("El nombre no puede estar vacío")
     else:

@@ -33,3 +33,7 @@ def test_no_permite_cantidad_cero():
     linea = LineaPedido("Mesa", 80.0, 0)
     with pytest.raises(ValueError):
         linea.subtotal()
+
+def test_descuento_exacto_doscientos_euros():
+    """Comprueba que un subtotal de 200€ aplica exactamente el 15% (30€)."""
+    assert calcular_descuento(200.0) == 30.0
